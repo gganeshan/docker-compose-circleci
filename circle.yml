@@ -1,0 +1,23 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker images
+    - docker build -t docker-circleci .
+    - docker tag docker-circleci girish07111982/docker-compose-circleci
+    - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker push girish07111982/docker-compose-circleci
+
+test:
+  override:
+    - docker ps -aq
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - docker images
+
